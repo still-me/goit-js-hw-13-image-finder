@@ -15,15 +15,17 @@ export default class ApiService {
     //     this.incrementPage();
     //     return hits;
     // })
-         try {
-            const response = await fetch(`https://pixabay.com/api/?image_type=photo&orientation=horizontal&q=${this.searchQuery}&page=${this.pageNumber}&per_page=12&key=${API_KEY}`)
-            const images = await response.json()
-            this.incrementPage();
-            return images.hits;
-         } catch (error) {
-             throw err;
-         }
+
+        const response = await fetch(`https://pixabay.com/api/?image_type=photo&orientation=horizontal&q=${this.searchQuery}&page=${this.pageNumber}&per_page=12&key=${API_KEY}`)
         
+        if (!response.ok) {
+            throw response
+        };
+
+        const {hits} = await response.json()
+        this.incrementPage();
+         return hits;
+         
     }
 
     incrementPage() {

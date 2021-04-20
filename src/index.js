@@ -57,22 +57,38 @@ function onFormSubmit(event) {
     }
 }
 
-function fetchPictures() {
-    loadMoreBtn.disable();
-    imagesApiService.fetchPictures()
-        .then(pictures => {
-            appendPicturesMarkup(pictures);
-            loadMoreBtn.enable();
-            clientStorage.increaseItem(STORAGE_KEY.IMAGES, pictures);
-            showFetchNotice(pictures);
-            scrollPageDown();
+// function fetchPictures() {
+//     loadMoreBtn.disable();
+//     imagesApiService.fetchPictures()
+//         .then(pictures => {
+//             appendPicturesMarkup(pictures);
+//             loadMoreBtn.enable();
+//             clientStorage.increaseItem(STORAGE_KEY.IMAGES, pictures);
+//             showFetchNotice(pictures);
+//             scrollPageDown();
 
-    })
-        .catch(error => {
-            console.log(error);
-            notify.error();
-            loadMoreBtn.hide();
-        });
+//     })
+//         .catch(error => {
+//             console.log(error);
+//             notify.error();
+//             loadMoreBtn.hide();
+//         });
+// }
+
+async function fetchPictures() {
+    loadMoreBtn.disable();
+
+    try {
+        const pictures = await imagesApiService.fetchPictures()
+        appendPicturesMarkup(pictures);
+        loadMoreBtn.enable();
+        clientStorage.increaseItem(STORAGE_KEY.IMAGES, pictures);
+        showFetchNotice(pictures);
+        scrollPageDown();
+    } catch (error) {
+        notify.error();
+        loadMoreBtn.hide();
+    }
 }
 
 function showFetchNotice (pictures) {
